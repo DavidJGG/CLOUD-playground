@@ -17,3 +17,5 @@ Note: you can install it globaly or localy, in this case is local instalation: c
 - **main app** hello-cdk\lib\hello-cdk-stack.js
 - **Generate cloud formation** ..\cdk-local-install\node_modules\.bin\cdk synth
 - **Deploy** ..\cdk-local-install\node_modules\.bin\cdk deploy
+- **show difference** ..\cdk-local-install\node_modules\.bin\cdk diff
+- **Destroy resources** ..\cdk-local-install\node_modules\.bin\cdk destroy

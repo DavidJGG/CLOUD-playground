@@ -18,14 +18,6 @@ class HelloCdkStack extends Stack {
       visibilityTimeout: Duration.seconds(300),
       queueName: "EstaEsMiSQS"
     });
-    console.log("*****************************************")
-    console.log("PINTANDO MIS PROPIEDADES")
-    console.log("scope")
-    console.log(scope)
-    console.log("id")
-    console.log(id)
-    console.log("props")
-    console.log(props)
   }
 }
 
