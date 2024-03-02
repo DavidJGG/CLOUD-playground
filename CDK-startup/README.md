@@ -1,5 +1,6 @@
 # Set-up
 Note: you can install it globaly or localy, in this case is local instalation: cdk-local-install/**
+- make a npm install inside cdk-local-install -> to install cdk locally
 - configure credentials
     - sso
     - cli 
