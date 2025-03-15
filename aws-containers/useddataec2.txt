@@ -8,6 +8,7 @@ unzip awscliv2.zip
 sudo ./aws/install
 cd ..
 
+echo "INSTALACION DEL AWS CLI HA TERMINADO Y TODO SALIO BIEN AL PARECER, ESTE MENSAJE ES PARA QUE SEAN NOTORIO"
 
 # Add Docker's official GPG key:
 sudo apt-get -y update
