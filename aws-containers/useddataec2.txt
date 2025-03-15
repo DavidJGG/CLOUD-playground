@@ -1,0 +1,41 @@
+apt-get -y update
+apt-get -y install unzip
+
+mkdir workfolder
+cd workfolder
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+cd ..
+
+
+# Add Docker's official GPG key:
+sudo apt-get -y update
+sudo apt-get -y install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get -y update
+
+sudo apt-get -y install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+
+aws ecr create-repository --repository-name test/pythonapp
+
+docker run -d -p 80:5000/tcp test/pythonapp:v1
+
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 533267351303.dkr.ecr.us-east-1.amazonaws.com
+
+docker build -t test/pythonapp .
+
+docker tag test/pythonapp:v1 533267351303.dkr.ecr.us-east-1.amazonaws.com/test/pythonapp:v1
+
+docker push 533267351303.dkr.ecr.us-east-1.amazonaws.com/test/pythonapp:v1
+
+docker run -d -p 80:5000/tcp test/pythonapp:v1
