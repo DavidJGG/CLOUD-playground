@@ -26,6 +26,10 @@ sudo apt-get -y update
 sudo apt-get -y install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 
+git clone https://github.com/DavidJGG/AWS-playground.git
+
+cd AWS-playground/aws-containers/python-project
+
 aws ecr create-repository --repository-name test/pythonapp
 
 docker run -d -p 80:5000/tcp test/pythonapp:v1
