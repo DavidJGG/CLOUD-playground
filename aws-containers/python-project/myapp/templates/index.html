@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recordatorios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Recordatorios</h1>
+    <a href="{{ url_for('crear') }}">Crear nuevo recordatorio</a>
+    <ul>
+        {% for id, recordatorio in recordatorios.items() %}
+            <li>
+                <strong>{{ recordatorio['titulo'] }}</strong><br>
+                {{ recordatorio['descripcion'] }}<br>
+                <a href="{{ url_for('editar', id=id) }}">Editar</a> | 
+                <a href="{{ url_for('eliminar', id=id) }}" onclick="return confirm('¿Seguro que deseas eliminar este recordatorio?')">Eliminar</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
