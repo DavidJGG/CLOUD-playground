@@ -1,0 +1,53 @@
+#!/bin/bash
+
+apt-get -y update
+apt-get -y install unzip
+
+mkdir workfolder
+cd workfolder
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+./aws/install
+cd ..
+
+echo "INSTALACION DEL AWS CLI HA TERMINADO Y TODO SALIO BIEN AL PARECER, ESTE MENSAJE ES PARA QUE SEAN NOTORIO"
+
+# Add Docker's official GPG key:
+apt-get -y update
+apt-get -y install ca-certificates curl
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  tee /etc/apt/sources.list.d/docker.list > /dev/null
+apt-get -y update
+
+apt-get -y install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+
+git clone https://github.com/DavidJGG/AWS-playground.git
+
+cd AWS-playground/aws-containers/python-project
+
+
+
+export jsonresult=$(aws ecr create-repository --repository-name test/ultima)
+
+export repouri=$(echo $jsonresult | jq -r '.repository.repositoryUri'):v1
+export repoid=$(echo $jsonresult | jq -r '.repository.repositoryUri | split("/") | .[0]')
+export reponame=$(echo $jsonresult | jq -r '.repository.repositoryName'):v1
+
+docker build -t $(echo $reponame) .
+
+docker tag $(echo $reponame) $(echo $repouri)
+
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $(echo $repoid)
+
+docker push $(echo $repouri)
+
+docker run -d -p 80:5000/tcp $(echo $reponame)
+

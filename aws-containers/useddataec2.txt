@@ -1,10 +1,12 @@
-apt-get -y update
-apt-get -y install unzip
+#!/bin/bash
 
-mkdir workfolder
+sudo apt-get -y update
+sudo apt-get -y install unzip
+
+sudo mkdir workfolder
 cd workfolder
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
+sudo curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+sudo unzip awscliv2.zip
 sudo ./aws/install
 cd ..
 
@@ -18,7 +20,7 @@ sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyring
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
 # Add the repository to Apt sources:
-echo \
+sudo echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
   $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
@@ -27,18 +29,25 @@ sudo apt-get -y update
 sudo apt-get -y install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 
-git clone https://github.com/DavidJGG/AWS-playground.git
+sudo git clone https://github.com/DavidJGG/AWS-playground.git
 
 cd AWS-playground/aws-containers/python-project
 
-aws ecr create-repository --repository-name test/pythonapp
 
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 533267351303.dkr.ecr.us-east-1.amazonaws.com
 
-docker build -t test/pythonapp:v1 .
+export jsonresult=$(sudo aws ecr create-repository --repository-name test/llevasudo)
 
-docker tag test/pythonapp:v1 533267351303.dkr.ecr.us-east-1.amazonaws.com/test/pythonapp:v1
+export repouri=$(echo $jsonresult | jq -r '.repository.repositoryUri'):v1
+export repoid=$(echo $jsonresult | jq -r '.repository.repositoryUri | split("/") | .[0]')
+export reponame=$(echo $jsonresult | jq -r '.repository.repositoryName'):v1
 
-docker push 533267351303.dkr.ecr.us-east-1.amazonaws.com/test/pythonapp:v1
+sudo docker build -t $(echo $reponame) .
 
-docker run -d -p 80:5000/tcp test/pythonapp:v1
+sudo docker tag $(echo $reponame) $(echo $repouri)
+
+sudo aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $(echo $repoid)
+
+sudo docker push $(echo $repouri)
+
+sudo docker run -d -p 80:5000/tcp $(echo $reponame)
+
