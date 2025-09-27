@@ -7,7 +7,7 @@ flowchart TD
     subgraph Jenkins
         J1(Start Jenkins pipeline)
         J2(Authenticate to Vault using Jenkins AppRole)
-        J3(Generate wrapped secret_id)
+        J3(Generate wrapped secret_id using the specific AppRole of the application)
         J4(Inject wrapping token into app host)
     end
 
