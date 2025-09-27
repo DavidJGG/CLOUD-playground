@@ -1,0 +1,12 @@
+Key        Value
+---        -----
+role_id    6922ca19-bd18-10de-7c38-4b750ed44c05
+Key                              Value
+---                              -----
+wrapping_token:                  FFFF
+wrapping_accessor:               GGGGGGGGGGGGGGGGGG
+wrapping_token_ttl:              15m
+wrapping_token_creation_time:    2025-09-27 17:20:33.825249013 -0600 CST
+wrapping_token_creation_path:    auth/microservices/role/micro1/secret-id
+wrapped_accessor:                2bf29a52-524c-31b3-6e24-a310977d7cb5
+
